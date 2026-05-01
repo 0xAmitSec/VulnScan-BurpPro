@@ -17,6 +17,13 @@ Built by [0xAmitSec](https://github.com/0xAmitSec) — Senior Cybersecurity Cons
 
 ---
 
+⭐ Star & 🍴 Fork this repo to support the project and get access to full payload updates.
+
+> **Note:** Full payload wordlists and advanced configuration files are shared exclusively with contributors who star and fork this repository. 
+> 
+
+---
+
 ## What is this?
 
 `VulnScan` is an aggressive, async web vulnerability scanner with full **Burp Suite Pro REST API integration**. It combines automated vulnerability detection with Burp's active scanner — giving maximum coverage for bug bounty and authorized penetration testing engagements.
