@@ -1,0 +1,85 @@
+# VulnScan - Default Configuration
+# Copy and customize this file for your target
+
+# ── Target ──────────────────────────────────────────────────────
+target: ""                   # Target URL (override via CLI -u flag)
+
+# ── Scope ────────────────────────────────────────────────────────
+scope_domains: []            # Allowed domains (empty = auto from target URL)
+  # - target.com
+  # - api.target.com
+  # - *.target.com
+
+exclude_domains:             # Never test these
+  - google.com
+  - googleapis.com
+  - gstatic.com
+  - facebook.com
+  - twitter.com
+  - youtube.com
+  - cdn.jsdelivr.net
+
+exclude_paths:               # Skip these path patterns (regex)
+  - /logout
+  - /signout
+  - /delete
+  - /reset
+  - /admin/delete
+
+# ── Scan Options ─────────────────────────────────────────────────
+profile: deep                # quick / deep / api
+threads: 20                  # Concurrent requests
+timeout: 10                  # Seconds per request
+delay: 0.2                   # Delay between requests (be nice)
+max_redirects: 5
+verify_ssl: false            # Skip SSL cert verification
+
+# ── Network ──────────────────────────────────────────────────────
+proxy:                       # Burp Suite: http://127.0.0.1:8080
+user_agent: "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/120.0 Safari/537.36"
+custom_headers: {}           # Extra headers for every request
+  # Authorization: "Bearer TOKEN"
+  # Cookie: "session=abc123"
+
+# ── Phases ───────────────────────────────────────────────────────
+recon: true                  # DNS, subdomain, port scanning
+web_crawl: true              # Web crawling and JS analysis
+vuln_scan: true              # Vulnerability scanning
+active_scan: true            # Active scanning with Nuclei (if installed)
+
+# ── Vulnerability Modules ────────────────────────────────────────
+check_xss: true
+check_sqli: true
+check_ssrf: true
+check_ssti: true
+check_xxe: true
+check_lfi: true
+check_open_redirect: true
+check_cmd_injection: true
+check_idor: true
+check_auth: true
+check_headers: true
+check_cors: true
+check_info_disclosure: true
+check_file_upload: true
+check_cloud: true
+check_advanced: true
+check_misconfig: true
+
+# ── Output ───────────────────────────────────────────────────────
+output_dir: output
+report_format: html          # html / json / all
+report_name: vulnscan_report
+
+# ── OAST (Out-of-Band Testing) ───────────────────────────────────
+oast_server: ""              # Interactsh: use.interactsh.com
+oast_token: ""               # Interactsh token
+
+# ── API Keys ─────────────────────────────────────────────────────
+shodan_key: ""
+
+# ── Notifications ────────────────────────────────────────────────
+slack_webhook: ""
+discord_webhook: ""
+telegram_token: ""
+telegram_chat_id: ""
