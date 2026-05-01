@@ -1,6 +1,106 @@
 # VulnScan — Advanced Web Vulnerability Scanner
 
-Bug Bounty & Penetration Testing Tool | Python 3.10+ | Async
+```
+ __   __      _       _____
+ \ \ / /     | |     /  __|
+  \ V / _   _| |_ __ \ `--.  ___ __ _ _ __
+  /   \| | | | | '_ \ `--. \/ __/ _` | '_ \
+ / /^\ \ |_| | | | | /\__/ / (_| (_| | | | |
+ \/   \/\__,_|_|_| |_\____/ \___\__,_|_| |_|
+    Aggressive Web Vulnerability Scanner v2.0
+    Burp Suite Pro Edition  |  Ethical Use Only
+```
+
+> **Web App VAPT Tool | Burp Suite Pro Integration | Bug Bounty Ready | Python 3.10+**
+
+Built by [0xAmitSec](https://github.com/0xAmitSec) — Senior Cybersecurity Consultant | CEHv12 | CCSP | Google VRP Awardee
+
+---
+
+## What is this?
+
+`VulnScan` is an aggressive, async web vulnerability scanner with full **Burp Suite Pro REST API integration**. It combines automated vulnerability detection with Burp's active scanner — giving maximum coverage for bug bounty and authorized penetration testing engagements.
+
+- **Automated scanning** — XSS, SQLi, SSRF, Sensitive Data, Info Disclosure
+- **Burp Suite Pro integration** — Active scanner trigger, Collaborator OOB detection, Sitemap sync
+- **Recon modules** — Subdomain enumeration, Port scanning, DNS analysis
+- **HTML + JSON reports** — Client-ready output
+
+---
+
+## Stats
+
+| Module | Coverage |
+|---|---|
+| Vulnerability Types | 5 (XSS, SQLi, SSRF, Sensitive Data, Info Disclosure) |
+| Recon Modules | 3 (Subdomain, Port Scan, DNS) |
+| Scan Profiles | 3 (Quick, Deep, API) |
+| Report Formats | 2 (HTML, JSON) |
+| Burp Integration | Full REST API + Collaborator OOB |
+
+---
+
+## Structure
+
+```
+vulnscan/
+├── main.py                    # Entry point — CLI interface
+├── requirements.txt           # Dependencies
+├── core/
+│   ├── engine.py              # Main scan engine
+│   ├── config.py              # Scan configuration
+│   └── logger.py              # Logging system
+├── modules/
+│   ├── vulns/
+│   │   ├── xss/scanner.py     # XSS detection
+│   │   ├── sqli/scanner.py    # SQL Injection detection
+│   │   ├── ssrf/scanner.py    # SSRF detection
+│   │   ├── sensitive_data/    # Sensitive data exposure
+│   │   ├── info_disclosure/   # Information disclosure
+│   │   └── multi_scanner.py   # Combined scanner
+│   ├── web/
+│   │   └── crawler.py         # Web crawler
+│   └── recon/
+│       ├── subdomain.py       # Subdomain enumeration
+│       ├── port_scan.py       # Port scanning
+│       └── dns.py             # DNS analysis
+├── integrations/
+│   ├── burp.py                # Burp Suite Pro REST API client
+│   └── burp_extension.py      # Burp extension
+├── reporting/
+│   └── report.py              # HTML + JSON report generator
+├── database/
+│   └── models.py              # SQLite findings storage
+├── utils/
+│   ├── http_client.py         # Async HTTP client
+│   └── scope_checker.py       # Scope validation
+└── config/
+    └── default.yaml           # Default configuration
+```
+
+---
+
+## Vulnerability Modules
+
+### Automated Detection
+
+| Vulnerability | Module | Method |
+|---|---|---|
+| Cross-Site Scripting (XSS) | `modules/vulns/xss` | Reflected + Stored + DOM |
+| SQL Injection | `modules/vulns/sqli` | Error-based + Blind + Time-based |
+| SSRF | `modules/vulns/ssrf` | OOB via Burp Collaborator |
+| Sensitive Data Exposure | `modules/vulns/sensitive_data` | Regex pattern matching |
+| Information Disclosure | `modules/vulns/info_disclosure` | Header + Response analysis |
+
+### Recon Modules
+
+| Module | Capability |
+|---|---|
+| Subdomain Enumeration | Multi-source subdomain discovery |
+| Port Scanning | Nmap-based service detection |
+| DNS Analysis | DNS record enumeration + zone transfer |
+
+---
 
 ## Quick Start
 
@@ -8,76 +108,90 @@ Bug Bounty & Penetration Testing Tool | Python 3.10+ | Async
 # Install dependencies
 pip install -r requirements.txt
 
-# Basic scan
+# Basic scan (routes through Burp proxy)
 python main.py -u https://target.com
 
-# Quick scan (faster, fewer checks)
-python main.py -u https://target.com --profile quick
+# Deep scan with all modules
+python main.py -u https://target.com --profile deep
 
-# Full deep scan with proxy (Burp Suite)
-python main.py -u https://target.com --proxy http://127.0.0.1:8080
+# Full Burp Suite Pro integration
+python main.py -u https://target.com \
+  --burp-api http://127.0.0.1:1337 \
+  --burp-key YOUR_API_KEY \
+  --burp-collab abc123.burpcollaborator.net \
+  --burp-scan --aggressive
 
-# Scan with custom scope
-python main.py -u https://target.com -s target.com -s api.target.com
-
-# API-only scan
-python main.py -u https://api.target.com --profile api
-
-# With custom headers (auth token)
-python main.py -u https://target.com -H "Authorization: Bearer TOKEN"
-
-# Using config file
-python main.py -u https://target.com --config config/default.yaml
+# With custom auth headers
+python main.py -u https://target.com \
+  -H "Cookie: session=abc123" \
+  -H "Authorization: Bearer TOKEN" \
+  --aggressive
 ```
 
-## What It Does
+---
 
-### Phase 1: Reconnaissance
-- Subdomain enumeration (crt.sh, HackerTarget, DNS brute force, Wayback)
-- DNS records (A, MX, NS, TXT, SOA, zone transfer)
-- Port scanning (100+ common ports)
-- Dangerous service detection
+## Scan Profiles
 
-### Phase 2: Web Crawling
-- JS-aware crawler with form extraction
-- JavaScript analysis — API endpoints, hardcoded secrets
-- Parameter discovery
+| Profile | Description |
+|---|---|
+| `quick` | Fast scan — critical checks only |
+| `deep` | Full scan — all modules, all payloads |
+| `api` | API-focused — REST endpoint testing |
+| `--aggressive` | Maximum mode — 50 threads, all modules, OOB detection |
 
-### Phase 3: Vulnerability Scanning
-- XSS (Reflected, Stored pattern, DOM)
-- SQL Injection (Error, Boolean-blind, Time-based, UNION)
-- SSRF (Cloud metadata, Blind, Header injection)
-- SSTI (Jinja2, Twig, Freemarker detection)
-- LFI / Path Traversal
-- Open Redirect
-- Information Disclosure (.git, .env, backup files)
-- CORS Misconfiguration
-- Security Headers
-- Clickjacking
-- Dangerous HTTP Methods
-- Directory Listing
+---
 
-### Phase 4: Reporting
-- Professional HTML report with filter
-- JSON report for programmatic use
-- CVSS scores and CWE IDs
-- Remediation suggestions
+## Burp Suite Pro Integration
 
-## Output Structure
+```bash
+# Step 1 — Enable REST API in Burp
+# Burp → User Options → REST API → Enable → Copy API Key
 
-```
-output/
-├── reports/
-│   ├── vulnscan_report_20250101_120000.html
-│   └── vulnscan_report_20250101_120000.json
-└── logs/
-    └── scan_20250101_120000.log
+# Step 2 — Run with Burp integration
+python main.py -u https://target.com \
+  --burp-api http://127.0.0.1:1337 \
+  --burp-key YOUR_KEY \
+  --burp-scan \
+  --burp-sitemap
+
+# Step 3 — OOB blind detection via Collaborator
+python main.py -u https://target.com \
+  --burp-collab YOUR.burpcollaborator.net \
+  --aggressive
 ```
 
-## Ethical Use
+---
 
-This tool is for **authorized security testing only**.
-- Only test targets you own or have written permission to test
-- Stay within the defined scope of bug bounty programs
-- Never cause damage or access production data
-- Follow responsible disclosure guidelines
+## Reports
+
+VulnScan generates two report formats automatically:
+
+- **HTML Report** — Visual, client-ready, color-coded by severity
+- **JSON Report** — Machine-readable, integrates with JIRA / HackerOne / Bugcrowd
+
+Reports saved to `output/reports/` directory.
+
+---
+
+## Authorization
+
+> This tool is intended **only** for assets you own or have written authorization to assess — bug bounty in-scope assets, authorized penetration testing engagements.
+
+Unauthorized use against systems you do not own is illegal. The author is not responsible for misuse.
+
+---
+
+## About
+
+**Author:** [0xAmitSec](https://github.com/0xAmitSec) — Amit Shrivastav
+**Role:** Senior Cybersecurity Consultant @ Capgemini | Ex IAF-CERT | Ministry of Defence
+**Certifications:** CCSP (ISC2) | CEHv12 | MeitY Certified | AWS Security
+**Recognition:** Google Vulnerability Reward Program — Rabbit & Dragon Award (2024)
+
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://linkedin.com/in/amit-shrivastava-cyber-security-auditor-146b6a248)
+
+---
+
+**License:** MIT — use freely, attribution appreciated.
+
+> *"The best vulnerability scanner is the one that finds what others miss."*
