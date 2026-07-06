@@ -202,3 +202,10 @@ Unauthorized use against systems you do not own is illegal. The author is not re
 **License:** MIT — use freely, attribution appreciated.
 
 > *"The best vulnerability scanner is the one that finds what others miss."*
+
+## Usage
+
+```bash
+python3 main.py
+```
+
